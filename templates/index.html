@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Фотоальбом</title>
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='background.jpg') }}");
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: sans-serif;
+            margin: 0;
+        }
+
+        .header {
+            background-color: #4da6ff; /* Голубая полоса */
+            padding: 15px 0;
+            text-align: center;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            border-bottom: 2px solid #3399ff;
+        }
+
+        .photo {
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 10px;
+            margin: 15px;
+            border-radius: 10px;
+            display: inline-block;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">📷 Мой Фотоальбом</div>
+
+    {% for filename, info in photos %}
+    <div class="photo">
+        <img src="{{ url_for('static', filename='uploads/' + filename) }}" width="300"><br>
+        <form action="{{ url_for('update_note', filename=filename) }}" method="post">
+            <textarea name="note" rows="2" cols="30" placeholder="Комментарий">{{ info.note }}</textarea><br>
+            <button type="submit">Сохранить</button>
+        </form>
+        <form action="{{ url_for('toggle_favorite', filename=filename) }}" method="post">
+            <button type="submit">
+                {% if info.favorite %}Удалить из избранного{% else %}Добавить в избранное{% endif %}
+            </button>
+        </form>
+    </div>
+    {% endfor %}
+</body>
+</html>
